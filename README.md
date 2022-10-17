@@ -18,12 +18,6 @@ screen shot:
 ## Installation
 
 
-## Demo 
-
-
-## Tests
-
-
 ## contributors
 
-William
+William Ramos
