@@ -5,7 +5,7 @@ const path = require("path");
 const api = require("./routes/api");
 const html = require("./routes/html");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 
@@ -18,4 +18,6 @@ app.use("/api", api);
 app.use("/", html);
 
 //console log the port
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(`App listening at http://localhost:${PORT}`);
+});
