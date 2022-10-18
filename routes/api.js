@@ -16,20 +16,25 @@ notes.get("/", (req, res) => {
 });
 
 //POST request
-notes.post('/api/notes', (req, res) => {
-  let db = fs.readFileSync('db/db.json');
-  db = JSON.parse(db);
-  res.json(db);
-  // creating body for note
-  let userNote = {
+notes.post("/", (req, res) => {
+  const newNotes = {
     title: req.body.title,
     text: req.body.text,
     id: uniqid(),
   };
-  // pushing created note to be written in the db.json file
-  db.push(userNote);
-  fs.writeFileSync('db/db.json', JSON.stringify(db));
-  res.json(db);
+  fs.readFile(newNotes, "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+    } else {
+      let parsedData = JSON.parse(data);
+      parsedData.push(newNotes);
+      fs.writeFile(db, JSON.stringify(parsedData, null, 4), (err) => {
+        err
+          ? console.error(err)
+          : console.info(`\nData written to ${destination}`);
+      });
+    }
+  });
 });
 
 notes.delete("/:id", (req, res) => {
