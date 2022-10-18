@@ -18,6 +18,4 @@ app.use("/api", api);
 app.use("/", html);
 
 //console log the port
-app.listen(PORT, () => {
-  console.log(`App listening at http://localhost:${PORT}`);
-});
+app.listen(PORT);
