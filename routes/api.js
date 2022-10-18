@@ -1,45 +1,38 @@
 // Dependencies
-const app = require("express").Router();
+const notes = require("express").Router();
 const fs = require("fs");
-
-const db = require("../db/db.json");
-const path = require("path");
-var uniqid = require("uniqid");
+require("../db/db.json");
+const uniqid = require("../helper/uuid"); 
 
 //GET Request
-app.get("/api/notes", (req, res) => {
-  fs.readFile(db).then((data) => {
-    console.log(data);
-    res.json(JSON.parse(data))
-  })
-  .catch((err) => {
-    console.error('Data error', err);
-  })
-});
-
-//POST request
-app.post("/api/notes", (req, res) => {
-  const newNotes = {
-    title: req.body.title,
-    text: req.body.text,
-    id: uniqid(),
-  };
-  fs.readFile(newNotes, "utf8", (err, data) => {
+notes.get("/", (req, res) => {
+  fs.readFile('./db/db.json', 'utf8', (err, data) => {
     if (err) {
       console.error(err);
     } else {
-      let parsedData = JSON.parse(data);
-      parsedData.push(newNotes);
-      fs.writeFile(db, JSON.stringify(parsedData, null, 4), (err) => {
-        err
-          ? console.error(err)
-          : console.info(`\nData written to ${destination}`);
-      });
+      res.json(JSON.parse(data))
     }
   });
 });
 
-app.delete("/api/notes/:id", (req, res) => {
+//POST request
+notes.post('/api/notes', (req, res) => {
+  let db = fs.readFileSync('db/db.json');
+  db = JSON.parse(db);
+  res.json(db);
+  // creating body for note
+  let userNote = {
+    title: req.body.title,
+    text: req.body.text,
+    id: uniqid(),
+  };
+  // pushing created note to be written in the db.json file
+  db.push(userNote);
+  fs.writeFileSync('db/db.json', JSON.stringify(db));
+  res.json(db);
+});
+
+notes.delete("/:id", (req, res) => {
   let noteId = req.params.id;
 
   fs.readFile("./db/db.json", "utf8", (err, data) => {
@@ -60,4 +53,4 @@ app.delete("/api/notes/:id", (req, res) => {
   });
 });
 
-module.exports = app;
+module.exports = notes;

@@ -1,14 +1,10 @@
 // Dependencies
-const path = require("path");
-const app = require("express").Router();
+const express = require("express");
+const apiRouter = require("./api.js");
+
+const app = express();
 
 // Routing
-app.get("/notes", function (req, res) {
-  res.sendFile(path.join(__dirname, "../public/notes.html"));
-});
-
-app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
+app.use('/notes', apiRouter);
 
 module.exports = app;
